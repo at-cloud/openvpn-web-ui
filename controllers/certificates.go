@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/adamwalach/go-openvpn/client/config"
@@ -161,6 +162,13 @@ func saveClientConfig(name string) (string, error) {
 		beego.Error(err)
 		return "", err
 	}
+
+	template, err := ioutil.ReadFile(destPath)
+	if err != nil {
+		return "", err
+	}
+	templateTxt := strings.Replace(string(template), "\\u002b", "+", -1)
+	ioutil.WriteFile(destPath, []byte(templateTxt), 0644)
 
 	return destPath, nil
 }
