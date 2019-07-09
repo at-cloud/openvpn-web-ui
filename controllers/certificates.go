@@ -4,6 +4,7 @@ import (
 	"archive/zip"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"os"
 	"path/filepath"
 	"time"
@@ -149,6 +150,10 @@ func saveClientConfig(name string) (string, error) {
 	cfg.Cipher = serverConfig.Cipher
 	cfg.Keysize = serverConfig.Keysize
 
+	cfg.Ca, _ = ReadText(models.GlobalCfg.OVConfigPath + "keys/" + name + ".crt")
+	cfg.Cert, _ = ReadText(models.GlobalCfg.OVConfigPath + "keys/" + name + ".crt")
+	cfg.Key, _ = ReadText(models.GlobalCfg.OVConfigPath + "keys/" + name + ".key")
+
 	destPath := models.GlobalCfg.OVConfigPath + "keys/" + name + ".ovpn"
 	if err := config.SaveToFile("conf/openvpn-client-config.tpl",
 		cfg, destPath); err != nil {
@@ -157,4 +162,14 @@ func saveClientConfig(name string) (string, error) {
 	}
 
 	return destPath, nil
+}
+
+func ReadText(path string) (string, error) {
+	text, err := ioutil.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+
+	text1 := string(text[:])
+	return text1, nil
 }

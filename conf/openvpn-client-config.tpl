@@ -11,8 +11,16 @@ keysize {{ .Keysize }}
 auth {{ .Auth }}
 tls-client
 
-ca {{ .Ca }}
-cert {{ .Cert }}
-key {{ .Key }}
+<ca>
+{{ .Ca }}
+</ca>
+
+<cert>
+{{ .Cert }}
+</cert>
+
+<key>
+{{ .Key }}
+</key>
 
 comp-lzo
