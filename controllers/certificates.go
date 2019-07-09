@@ -44,13 +44,13 @@ func (c *CertificatesController) Download() {
 
 	zw := zip.NewWriter(c.Controller.Ctx.ResponseWriter)
 
-	keysPath := models.GlobalCfg.OVConfigPath + "keys/"
+	//keysPath := models.GlobalCfg.OVConfigPath + "keys/"
 	if cfgPath, err := saveClientConfig(name); err == nil {
 		addFileToZip(zw, cfgPath)
 	}
-	addFileToZip(zw, keysPath+"ca.crt")
-	addFileToZip(zw, keysPath+name+".crt")
-	addFileToZip(zw, keysPath+name+".key")
+	//addFileToZip(zw, keysPath+"ca.crt")
+	//addFileToZip(zw, keysPath+name+".crt")
+	//addFileToZip(zw, keysPath+name+".key")
 
 	if err := zw.Close(); err != nil {
 		beego.Error(err)
@@ -150,9 +150,10 @@ func saveClientConfig(name string) (string, error) {
 	cfg.Cipher = serverConfig.Cipher
 	cfg.Keysize = serverConfig.Keysize
 
-	cfg.Ca, _ = ReadText(models.GlobalCfg.OVConfigPath + "keys/" + name + ".crt")
-	cfg.Cert, _ = ReadText(models.GlobalCfg.OVConfigPath + "keys/" + name + ".crt")
-	cfg.Key, _ = ReadText(models.GlobalCfg.OVConfigPath + "keys/" + name + ".key")
+	keysPath := models.GlobalCfg.OVConfigPath + "keys/"
+	cfg.Ca, _ = ReadText(keysPath + "ca.crt")
+	cfg.Cert, _ = ReadText(keysPath + name + ".crt")
+	cfg.Key, _ = ReadText(keysPath + name + ".key")
 
 	destPath := models.GlobalCfg.OVConfigPath + "keys/" + name + ".ovpn"
 	if err := config.SaveToFile("conf/openvpn-client-config.tpl",
