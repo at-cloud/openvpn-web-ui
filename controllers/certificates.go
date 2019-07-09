@@ -167,7 +167,7 @@ func saveClientConfig(name string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	templateTxt := strings.Replace(string(template), "\\u002b", "+", -1)
+	templateTxt := strings.Replace(string(template), "&#43;", "+", -1)
 	ioutil.WriteFile(destPath, []byte(templateTxt), 0644)
 
 	return destPath, nil
